@@ -1,8 +1,12 @@
 package com.bassist_zero;
 
+import com.bassist_zero.Bank.App;
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+        App bankApp = new App();
+        bankApp.on();
     }
+
 }
