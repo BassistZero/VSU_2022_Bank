@@ -1,21 +1,16 @@
 package com.bassist_zero.Bank;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class App {
 
     private final Scanner input = new Scanner(System.in);
     private Menu menu = Menu.main;
-    private Menu previousMenu = Menu.main;
-
-    private final ArrayList<User> users = new ArrayList<>();
+    private Menu previousMenu;
+    private final UserManager userStore = UserManager.getInstance();
+    private User user;
 
     public void on() {
-        users.add(new User("root", "root"));
-        users.add(new User("test", "123"));
-
         while (true) {
             configureUI(menu);
         }
@@ -30,7 +25,7 @@ public class App {
             case signUp -> configureSignUpMenu();
             case exit -> configureExitMenu();
             case error -> { configureErrorMenu(); return; }
-            case profile -> configureProfileMenu();
+            case profile -> configureProfileMenu(user);
             case profileNotFound -> configureProfileNotFoundMenu();
             case profileAlreadyExists -> configureProfileAlreadyExistsMenu();
         }
@@ -54,11 +49,12 @@ public class App {
         System.out.println("Enter Your Password:");
         String password = input.next();
 
-        User currentUser = new User(login, password);
-
-        if (users.stream().anyMatch(user -> Objects.equals(user, currentUser))) {
+        try {
+            userStore.authenticate(login, password);
             this.menu = Menu.profile;
-        } else {
+            this.user = new User(login, password);
+
+        } catch (Exception exception) {
             this.menu = Menu.profileNotFound;
         }
     }
@@ -72,16 +68,17 @@ public class App {
 
         User newUser = new User(login, password);
 
-        if (users.stream().anyMatch(user -> Objects.equals(user.login, newUser.login))) {
-            this.menu = Menu.profileAlreadyExists;
-        } else {
-            users.add(newUser);
+        try {
+            userStore.addUser(newUser);
             this.menu = Menu.profile;
+            this.user = newUser;
 
             System.out.println();
             System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
             System.out.println("Profile successfully created");
             System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+        } catch (Exception exception) {
+            this.menu = Menu.profileAlreadyExists;
         }
     }
 
@@ -93,11 +90,11 @@ public class App {
         this.menu = previousMenu;
     }
 
-    private void configureProfileMenu() {
+    private void configureProfileMenu(User user) {
         switch (input.nextInt()) {
-            case 1 -> createAccount();
-            case 2 -> deleteAccount();
-            case 3 -> showAllAccounts();
+            case 1 -> createAccount(user);
+            case 2 -> deleteAccount(user);
+            case 3 -> showAllAccounts(user);
             case 0 -> this.menu = Menu.main;
             default -> this.menu = Menu.error;
         }
@@ -111,16 +108,26 @@ public class App {
         this.menu = Menu.signUp;
     }
 
-    private void createAccount() {
-        System.out.println("Account created");
+    private void createAccount(User user) {
+        Operation.create.execute(user);
+
+        System.out.println();
+        System.out.println("-:-:-:-:-:-:-:-");
+        System.out.println("Account Created");
+        System.out.println("-:-:-:-:-:-:-:-");
     }
 
-    private void deleteAccount() {
-        System.out.println("Account deleted");
+    private void deleteAccount(User user) {
+        Operation.delete.execute(user);
     }
 
-    private void showAllAccounts() {
-        System.out.println("*All Accounts*");
+    private void showAllAccounts(User user) {
+        System.out.println();
+        System.out.println("-:-:-:-:-:-:-:-");
+        System.out.println("Accounts List:");
+        System.out.println("-:-:-:-:-:-:-:-");
+
+        Operation.all.execute(user);
     }
 
 }
