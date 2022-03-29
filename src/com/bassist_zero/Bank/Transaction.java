@@ -32,10 +32,10 @@ public class Transaction {
             safeLogin = to.getLogin();
         }
 
-        return "from: " + from.getLogin() + '\''  +
-                ", to: " + safeLogin + '\''  +
-                ", amount: " + amount + '\''  +
-                ", on: " + date + '\''  +
+        return "from: " + from.getLogin() +
+                ", to: " + safeLogin +
+                ", amount: " + amount +
+                ", on: " + date +
                 '}';
     }
 

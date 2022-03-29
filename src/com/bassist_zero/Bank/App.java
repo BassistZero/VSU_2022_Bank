@@ -162,6 +162,19 @@ public class App {
     }
 
     private void showAccount(User user) {
+        if(AccountManager.getInstance().getUserAccounts(user).isEmpty()) {
+            System.out.println();
+            System.out.println("-:-:-:-:-:-:-:-:-:-:-");
+            System.out.println("You have no accounts");
+            System.out.println("-:-:-:-:-:-:-:-:-:-:-");
+
+            return;
+        } else if(AccountManager.getInstance().getUserAccounts(user).size() == 1) {
+            this.menu = Menu.account;
+            this.uid = AccountManager.getInstance().getUserAccounts(user).stream().findFirst().get().getUid();
+            return;
+        }
+
         showAllAccounts(user);
 
         System.out.println();

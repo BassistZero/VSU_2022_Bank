@@ -36,10 +36,18 @@ public enum AccountOperation {
 
         float amount = new Scanner(System.in).nextFloat();
 
+        if (amount <= 0) {
+            System.out.println();
+            System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+            System.out.println("Amount should be positive");
+            System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+            return;
+        }
+
         Account account = getAccount(user, uid);
 
         account.deposit(amount);
-        account.addTransaction(new Transaction(user, null, amount, new Date()));
+        account.addTransaction(new Transaction(user, user, amount, new Date()));
     }
 
     private void withdraw(User user, String uid) {
@@ -48,10 +56,18 @@ public enum AccountOperation {
 
         float amount = new Scanner(System.in).nextFloat();
 
+        if (amount <= 0) {
+            System.out.println();
+            System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+            System.out.println("Amount should be positive");
+            System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+            return;
+        }
+
         Account account = getAccount(user, uid);
 
         account.withdraw(amount);
-        account.addTransaction(new Transaction(user, null, amount, new Date()));
+        account.addTransaction(new Transaction(user, user, amount, new Date()));
     }
 
     private void transfer(User user, String uid) {
@@ -65,15 +81,24 @@ public enum AccountOperation {
         String receiverLogin = new Scanner(System.in).next();
 
         Account senderAccount = getAccount(user, uid);
-        Account receiverAccount = getAccount(receiverLogin);
+        Optional<Account> receiverAccount = getAccount(receiverLogin);
+
+        if (receiverAccount.isEmpty()) {
+            System.out.println();
+            System.out.println("-:-:-:-:-:-:-");
+            System.out.println("No such User");
+            System.out.println("-:-:-:-:-:-:-");
+
+            return;
+        }
 
         senderAccount.withdraw(amount);
-        receiverAccount.deposit(amount);
+        receiverAccount.get().deposit(amount);
 
         Transaction transaction = new Transaction(user, userManager.getUser(receiverLogin), amount, new Date());
 
         senderAccount.addTransaction(transaction);
-        receiverAccount.addTransaction(transaction);
+        receiverAccount.get().addTransaction(transaction);
     }
 
     private void balance(User user, String uid) {
@@ -95,10 +120,10 @@ public enum AccountOperation {
         return account.get();
     }
 
-    private Account getAccount(String login) {
+    private Optional<Account> getAccount(String login) {
         Optional<Account> account = accountManager.getAccount(login);
 
-        return account.get();
+        return account;
     }
 
 }
