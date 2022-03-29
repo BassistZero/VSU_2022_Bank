@@ -3,13 +3,24 @@ package com.bassist_zero.Bank;
 import java.util.Objects;
 
 public class User {
-    String login;
-    String password;
+
+    // MARK: - Private Properties
+
+    private final String login;
+    private final String password;
+
+    // MARK: - Public Methods
 
     User(String login, String password) {
         this.login = login;
         this.password = password;
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    // MARK: - Formatting
 
     @Override
     public boolean equals(Object o) {
@@ -23,4 +34,12 @@ public class User {
     public int hashCode() {
         return Objects.hash(login, password);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                '}';
+    }
+
 }

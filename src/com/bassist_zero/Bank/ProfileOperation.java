@@ -1,31 +1,30 @@
 package com.bassist_zero.Bank;
 
+import java.util.Optional;
 import java.util.Scanner;
 
-public enum Operation {
+public enum ProfileOperation {
     create,
     delete,
-    deposit,
-    withdraw,
-    transfer,
-    balance,
-    history,
-    all;
+    getAccount,
+    getAccounts;
+
+    // MARK: - Private Properties
 
     private final AccountManager accountManager = AccountManager.getInstance();
 
-    public void execute(User user) {
+    // MARK: - Public Methods
+
+    public void execute(User user, String uid) {
         switch (this) {
             case create -> createAccount(user);
             case delete -> deleteAccount(user);
-            case deposit -> depositAccount(user);
-            case withdraw -> withdrawAccount(user);
-            case transfer -> transferAccount(user);
-            case balance -> balanceAccount(user);
-            case history -> historyAccount(user);
-            case all ->  allAccounts(user);
+            case getAccount -> getAccount(user, uid);
+            case getAccounts ->  getAccounts(user);
         }
     }
+
+    // MARK: - Configuration
 
     private void createAccount(User user) {
         Account account = new Account(user);
@@ -34,9 +33,9 @@ public enum Operation {
 
     private void deleteAccount(User user) {
         System.out.println();
-        System.out.println("Type a uid of the account you want to delete:");
+        System.out.println("Type the id of the account you want to delete:");
 
-        allAccounts(user);
+        getAccounts(user);
 
         String uid = new Scanner(System.in).next();
 
@@ -48,27 +47,11 @@ public enum Operation {
         System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
     }
 
-    private void depositAccount(User user) {
-
+    private Optional<Account> getAccount(User user, String uid) {
+        return accountManager.getAccount(user , uid);
     }
 
-    private void withdrawAccount(User user) {
-
-    }
-
-    private void transferAccount(User user) {
-
-    }
-
-    private void balanceAccount(User user) {
-
-    }
-
-    private void historyAccount(User user) {
-
-    }
-
-    private void allAccounts(User user) {
+    private void getAccounts(User user) {
         if (accountManager.getUserAccounts(user).isEmpty()) {
             System.out.println("No Accounts Yet");
             return;
@@ -78,4 +61,5 @@ public enum Operation {
                 .map(Account::toString)
                 .forEach(System.out::println);
     }
+
 }

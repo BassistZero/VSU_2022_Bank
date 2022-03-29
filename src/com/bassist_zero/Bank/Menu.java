@@ -8,7 +8,10 @@ public enum Menu {
     profile,
     profileNotFound,
     profileAlreadyExists,
+    account,
     error;
+
+    // MARK: - Public Methods
 
     public void showUI() {
         System.out.println();
@@ -20,10 +23,13 @@ public enum Menu {
             case profile -> showProfile();
             case profileNotFound -> showProfileNotFound();
             case profileAlreadyExists -> showProfileAlreadyExists();
+            case account -> showAccount();
             case exit -> showExit();
             case error -> showError();
         }
     }
+
+    // MARK: - Configuration
 
     private void showMain() {
         System.out.println("-- Main Menu --");
@@ -45,6 +51,7 @@ public enum Menu {
         System.out.println("1: Create new account");
         System.out.println("2: Delete account");
         System.out.println("3: Show all accounts");
+        System.out.println("4: Choose an account");
         System.out.println("0: Log Out");
     }
 
@@ -53,6 +60,22 @@ public enum Menu {
         System.out.println("1: Sign In Again");
         System.out.println("2: Sign Up");
         System.out.println("0: Exit");
+    }
+
+    private void showProfileAlreadyExists() {
+        System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+        System.out.println("The Login Already exists. Please, try the new one");
+        System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+    }
+
+    private void showAccount() {
+        System.out.println("-- Account Menu --");
+        System.out.println("1: Deposit");
+        System.out.println("2: Withdraw");
+        System.out.println("3: Transfer");
+        System.out.println("4: Balance");
+        System.out.println("5: History");
+        System.out.println("0: Back to Profile");
     }
 
     private void showExit() {
@@ -65,9 +88,4 @@ public enum Menu {
         System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
     }
 
-    private void showProfileAlreadyExists() {
-        System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
-        System.out.println("The Login Already exists. Please, try the new one");
-        System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
-    }
 }

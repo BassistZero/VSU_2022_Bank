@@ -1,20 +1,28 @@
 package com.bassist_zero.Bank;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class App {
 
+    // MARK: - Private Properties
+
     private final Scanner input = new Scanner(System.in);
     private Menu menu = Menu.main;
     private Menu previousMenu;
-    private final UserManager userStore = UserManager.getInstance();
+    private final UserManager userManager = UserManager.getInstance();
     private User user;
+    private String uid;
+
+    // MARK: - Public Methods
 
     public void on() {
         while (true) {
             configureUI(menu);
         }
     }
+
+    // MARK: - UI
 
     private void configureUI(Menu menu) {
         menu.showUI();
@@ -28,10 +36,13 @@ public class App {
             case profile -> configureProfileMenu(user);
             case profileNotFound -> configureProfileNotFoundMenu();
             case profileAlreadyExists -> configureProfileAlreadyExistsMenu();
+            case account -> configureAccountMenu(user, uid);
         }
 
         previousMenu = menu;
     }
+
+    // MARK: - Configuration
 
     private void configureMainMenu() {
         switch (input.nextInt()) {
@@ -50,7 +61,7 @@ public class App {
         String password = input.next();
 
         try {
-            userStore.authenticate(login, password);
+            userManager.authenticate(login, password);
             this.menu = Menu.profile;
             this.user = new User(login, password);
 
@@ -69,7 +80,7 @@ public class App {
         User newUser = new User(login, password);
 
         try {
-            userStore.addUser(newUser);
+            userManager.addUser(newUser);
             this.menu = Menu.profile;
             this.user = newUser;
 
@@ -95,6 +106,7 @@ public class App {
             case 1 -> createAccount(user);
             case 2 -> deleteAccount(user);
             case 3 -> showAllAccounts(user);
+            case 4 -> showAccount(user);
             case 0 -> this.menu = Menu.main;
             default -> this.menu = Menu.error;
         }
@@ -108,8 +120,22 @@ public class App {
         this.menu = Menu.signUp;
     }
 
+    private void configureAccountMenu(User user, String uid) {
+        switch (input.nextInt()) {
+            case 1 -> deposit(user, uid);
+            case 2 -> withdraw(user, uid);
+            case 3 -> transfer(user, uid);
+            case 4 -> balance(user, uid);
+            case 5 -> history(user, uid);
+            case 0 -> this.menu = Menu.profile;
+            default -> this.menu = Menu.error;
+        }
+    }
+
+    // MARK: - Private Methods
+
     private void createAccount(User user) {
-        Operation.create.execute(user);
+        ProfileOperation.create.execute(user, null);
 
         System.out.println();
         System.out.println("-:-:-:-:-:-:-:-");
@@ -118,16 +144,61 @@ public class App {
     }
 
     private void deleteAccount(User user) {
-        Operation.delete.execute(user);
+        ProfileOperation.delete.execute(user, null);
+
+        System.out.println();
+        System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
+        System.out.println("Account Successfully Deleted");
+        System.out.println("-:-:-:-:-:-:-:-:-:-:-:-:-:-:-");
     }
 
     private void showAllAccounts(User user) {
         System.out.println();
         System.out.println("-:-:-:-:-:-:-:-");
         System.out.println("Accounts List:");
-        System.out.println("-:-:-:-:-:-:-:-");
 
-        Operation.all.execute(user);
+        ProfileOperation.getAccounts.execute(user, null);
+        System.out.println("-:-:-:-:-:-:-:-");
+    }
+
+    private void showAccount(User user) {
+        showAllAccounts(user);
+
+        System.out.println();
+        System.out.println("Type the id of the account:");
+
+        this.uid = input.next();
+
+        Optional<Account> account = AccountManager.getInstance().getAccount(user, uid);
+
+        if(account.isEmpty()) {
+            System.out.println();
+            System.out.println("-:-:-:-:-:-:-:-");
+            System.out.println("No such account");
+            System.out.println("-:-:-:-:-:-:-:-");
+        } else {
+            this.menu = Menu.account;
+        }
+    }
+
+    private void deposit(User user, String uid) {
+        AccountOperation.deposit.execute(user, uid);
+    }
+
+    private void withdraw(User user, String uid) {
+        AccountOperation.withdraw.execute(user, uid);
+    }
+
+    private void transfer(User user, String uid) {
+        AccountOperation.transfer.execute(user, uid);
+    }
+
+    private void balance(User user, String uid) {
+        AccountOperation.balance.execute(user, uid);
+    }
+
+    private void history(User user, String uid) {
+        AccountOperation.history.execute(user, uid);
     }
 
 }
