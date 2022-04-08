@@ -1,4 +1,8 @@
-package com.bassist_zero.Bank;
+package com.bassist_zero.Bank.Operation;
+
+import com.bassist_zero.Bank.Domain.Account;
+import com.bassist_zero.Bank.Storage.AccountManager;
+import com.bassist_zero.Bank.Domain.User;
 
 import java.util.Optional;
 import java.util.Scanner;

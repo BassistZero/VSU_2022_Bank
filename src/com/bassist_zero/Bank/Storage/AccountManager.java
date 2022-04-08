@@ -1,4 +1,7 @@
-package com.bassist_zero.Bank;
+package com.bassist_zero.Bank.Storage;
+
+import com.bassist_zero.Bank.Domain.Account;
+import com.bassist_zero.Bank.Domain.User;
 
 import java.util.ArrayList;
 import java.util.List;

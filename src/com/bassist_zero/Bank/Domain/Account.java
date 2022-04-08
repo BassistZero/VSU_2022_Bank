@@ -1,4 +1,4 @@
-package com.bassist_zero.Bank;
+package com.bassist_zero.Bank.Domain;
 
 import java.util.ArrayList;
 import java.util.List;

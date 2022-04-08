@@ -1,4 +1,10 @@
-package com.bassist_zero.Bank;
+package com.bassist_zero.Bank.Operation;
+
+import com.bassist_zero.Bank.Domain.Account;
+import com.bassist_zero.Bank.Storage.AccountManager;
+import com.bassist_zero.Bank.Storage.UserManager;
+import com.bassist_zero.Bank.Domain.Transaction;
+import com.bassist_zero.Bank.Domain.User;
 
 import java.util.Date;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.bassist_zero.Bank;
+package com.bassist_zero.Bank.Domain;
 
 import java.util.Objects;
 
@@ -11,7 +11,7 @@ public class User {
 
     // MARK: - Public Methods
 
-    User(String login, String password) {
+    public User(String login, String password) {
         this.login = login;
         this.password = password;
     }

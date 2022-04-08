@@ -1,4 +1,6 @@
-package com.bassist_zero.Bank;
+package com.bassist_zero.Bank.Domain;
+
+import com.bassist_zero.Bank.Domain.User;
 
 import java.util.Date;
 
